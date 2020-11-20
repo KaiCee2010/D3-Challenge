@@ -71,12 +71,23 @@ function makeResponsive() {
         .data(healthData)
         .enter()
         .append("circle")
+        .attr("class", "stateCircle")
         .attr("cx", d => xPovertyScale(d.poverty))
         .attr("cy", d => yHealthScale(d.healthcare))
         .attr("r", "10")
-        .attr("fill", "gold")
-        .attr("stroke-width", "1")
-        .attr("stroke", "black");
+        // .attr("fill", "gold")
+        // .attr("stroke-width", "1")
+        // .attr("stroke", "black")
+        ;
+
+        chartGroup.selectAll("text")
+        .data(healthData)
+        .enter()
+        .append("text")
+        // Add your code below this line
+        .attr("x", d => xPovertyScale(d.poverty))
+        .attr("y", d => yHealthScale(d.healthcare))
+        .text(d => d.abbr);
     
     })
 
