@@ -31,6 +31,7 @@ function makeResponsive() {
     var svg = d3
     .select("#scatter")
     .append("svg")
+    .attr("class", "chart")
     .attr("height", svgHeight)
     .attr("width", svgWidth);
 
@@ -56,8 +57,8 @@ function makeResponsive() {
         .range([chartHeight, 0]);
 
         // create axes
-        var xAxis = d3.axisBottom(xPovertyScale);
-        var yAxis = d3.axisLeft(yHealthScale);
+        var xAxis = d3.axisBottom(xPovertyScale).ticks(6);
+        var yAxis = d3.axisLeft(yHealthScale).ticks(6);
 
         // append axes
         chartGroup.append("g")
@@ -84,6 +85,7 @@ function makeResponsive() {
         .data(healthData)
         .enter()
         .append("text")
+        .attr("class", "stateText")
         // Add your code below this line
         .attr("x", d => xPovertyScale(d.poverty))
         .attr("y", d => yHealthScale(d.healthcare))
