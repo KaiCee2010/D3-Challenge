@@ -14,15 +14,14 @@ function makeResponsive() {
 
     // SVG wrapper dimensions are determined by the current width and
     // height of the browser window.
-    var svgWidth = window.innerWidth;
+    var svgWidth = window.innerWidth ;
     var svgHeight = window.innerHeight;
-
-    
+  
     var margin = {
-        top: 50,
-        bottom: 50,
-        right: 50,
-        left: 50
+        top: 25,
+        bottom: 25,
+        right: 25,
+        left: 25
     };
 
     var chartHeight = svgHeight - margin.top - margin.bottom;
@@ -57,8 +56,8 @@ function makeResponsive() {
         .range([chartHeight, 0]);
 
         // create axes
-        var xAxis = d3.axisBottom(xPovertyScale).ticks(6);
-        var yAxis = d3.axisLeft(yHealthScale).ticks(6);
+        var xAxis = d3.axisBottom(xPovertyScale);
+        var yAxis = d3.axisLeft(yHealthScale);
 
         // append axes
         chartGroup.append("g")
@@ -67,6 +66,17 @@ function makeResponsive() {
 
         chartGroup.append("g")
             .call(yAxis);
+
+        var circlesGroup = chartGroup.selectAll("circle")
+        .data(healthData)
+        .enter()
+        .append("circle")
+        .attr("cx", d => xPovertyScale(d.poverty))
+        .attr("cy", d => yHealthScale(d.healthcare))
+        .attr("r", "10")
+        .attr("fill", "gold")
+        .attr("stroke-width", "1")
+        .attr("stroke", "black");
     
     })
 
