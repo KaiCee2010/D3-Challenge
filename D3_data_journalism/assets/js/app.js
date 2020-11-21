@@ -18,12 +18,13 @@ function makeResponsive() {
     var svgHeight = window.innerHeight;
   
     var margin = {
-        top: 25,
-        bottom: 25,
-        right: 25,
-        left: 25
+        top: 50,
+        bottom: 50,
+        right: 50,
+        left: 50
     };
 
+      
     var chartHeight = svgHeight - margin.top - margin.bottom;
     var chartWidth = svgWidth - margin.left - margin.right;
 
@@ -31,7 +32,6 @@ function makeResponsive() {
     var svg = d3
     .select("#scatter")
     .append("svg")
-    .attr("class", "chart")
     .attr("height", svgHeight)
     .attr("width", svgWidth);
 
@@ -45,9 +45,10 @@ function makeResponsive() {
            
             data.healthcare = +data.healthcare;
             data.poverty = +data.poverty;
-          });
 
-              
+            console.log(data)
+        });
+
         var xPovertyScale = d3.scaleLinear()
         .domain([0, d3.max(healthData, d => d.poverty)])
         .range([0, chartWidth]);
@@ -68,31 +69,10 @@ function makeResponsive() {
         chartGroup.append("g")
             .call(yAxis);
 
-        var circlesGroup = chartGroup.selectAll("circle")
-        .data(healthData)
-        .enter()
-        .append("circle")
-        .attr("class", "stateCircle")
-        .attr("cx", d => xPovertyScale(d.poverty))
-        .attr("cy", d => yHealthScale(d.healthcare))
-        .attr("r", "10")
-        // .attr("fill", "gold")
-        // .attr("stroke-width", "1")
-        // .attr("stroke", "black")
-        ;
-
-        chartGroup.selectAll("text")
-        .data(healthData)
-        .enter()
-        .append("text")
-        .attr("class", "stateText")
-        // Add your code below this line
-        .attr("x", d => xPovertyScale(d.poverty))
-        .attr("y", d => yHealthScale(d.healthcare))
-        .text(d => d.abbr);
+              
     
-    })
 
+});
 
 }
 
