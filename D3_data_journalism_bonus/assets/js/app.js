@@ -105,24 +105,24 @@ function renderCircles(circlesGroup, newXScale, chosenXaxis, newYScale, chosenYa
 // function used for updating circles group with new tooltip
 function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
 
-    if (chosenXAxis === "hair_length") {
-      var label = "Hair Length:";
+    if (chosenXAxis === "poverty") {
+      var xlabel = "Poverty (%)";
     }
     else if (chosenXAxis === "age") {
-        var label = "Age:";
+        var xlabel = "Age (Median)";
       }
     else {
-      var label = "Household Income:";
+      var xlabel = "Household Income (Median)";
     }
 
     if (chosenYAxis === "healthcare") {
-        var label = "Healthcare:";
+        var ylabel = "Healthcare (%)";
     }
     else if (chosenYAxis === "smokes") {
-        var label = "Smokes:";
+        var ylabel = "Smokes (%)";
     }
     else {
-    var label = "Obese:";
+    var ylabel = "Obese (%)";
     }
 
 
@@ -130,7 +130,7 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
         .attr("class", "d3-tip") //toolTip doesn't have a "classed()" function like core d3 uses to add classes, so we use the attr() method.
         .offset([80, 50]) // (vertical, horizontal)
         .html(function(d) {
-            return (`${d[chosenXAxis]}<br> ${d[chosenYAxis]}%`);
+            return (`${d.state}<br>${xlabel}: ${d[chosenXAxis]}<br> ${ylabel}: ${d[chosenYAxis]}`);
         });
             
         // Step 2: Create the tooltip in chartGroup.
