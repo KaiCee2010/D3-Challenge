@@ -13,7 +13,7 @@ function makeResponsive() {
     }
     
     svgWidth = document.getElementById('scatter').clientWidth;
-    svgHeight = svgWidth / 1.25;
+    svgHeight = svgWidth / 1.45;
     
     
     // Append SVG element
@@ -47,17 +47,17 @@ function makeResponsive() {
             console.log(data)
         });
 
-        var xPovertyScale = d3.scaleLinear()
-        .domain([d3.min(healthData, d => d.poverty)/1.25, d3.max(healthData, d => d.poverty)*1.05])
+        var xScale = d3.scaleLinear()
+        .domain([d3.min(healthData, d => d.poverty)/1.35, d3.max(healthData, d => d.poverty)*1.15])
         .range([0, chartWidth]);
 
-        var yHealthScale = d3.scaleLinear()
-        .domain([d3.min(healthData, d => d.healthcare)/1.25, d3.max(healthData, d => d.healthcare)*1.05])
+        var yScale = d3.scaleLinear()
+        .domain([d3.min(healthData, d => d.healthcare)/1.35, d3.max(healthData, d => d.healthcare)*1.35])
         .range([chartHeight, 0]);
 
         // create axes
-        var xAxis = d3.axisBottom(xPovertyScale).ticks(6);
-        var yAxis = d3.axisLeft(yHealthScale).ticks(6);
+        var xAxis = d3.axisBottom(xScale).ticks(6);
+        var yAxis = d3.axisLeft(yScale).ticks(6);
 
         // append axes
         chartGroup.append("g")
@@ -67,18 +67,57 @@ function makeResponsive() {
         chartGroup.append("g")
             .call(yAxis);
 
-        var circlesGroup = chartGroup.selectAll("circle")
+        var radius = 10
+
+        
+        var circlesGroup = chartGroup.append("g")
+        .selectAll("circle")
         .data(healthData)
         .enter()
         .append("circle")
         .attr("class", "stateCircle")
-        .attr("cx", d => xPovertyScale(d.poverty))
-        .attr("cy", d => yHealthScale(d.healthcare))
-        .attr("r", "10");
+        .attr("cx", d => xScale(d.poverty))
+        .attr("cy", d => yScale(d.healthcare))
+        .attr("r", 10);
         
 
-              
-    
+        var label = chartGroup.append("g")
+            // .attr("font-family", "Yanone Kaffeesatz")
+            // .attr("font-weight", 700)
+            .attr("text-anchor", "middle")
+            .selectAll("text")
+            .data(healthData)
+            .enter()
+            .append("text")
+            .attr("class", "stateText")
+            // .attr("opacity", 0)
+            // .attr("dy", "0.35em")
+            .attr("x", d => xScale(d.poverty))
+            .attr("y", d => yScale(d.healthcare)*1.00625)
+            .attr("font-size", 10)
+            .text(d => d.abbr)
+            ;  
+            
+        var toolTip = d3.tip()
+        .attr("class", "d3-tip") //toolTip doesn't have a "classed()" function like core d3 uses to add classes, so we use the attr() method.
+        .offset([50, 20]) // (vertical, horizontal)
+        .html(function(d) {
+            return (`<strong>${d.state}<strong>`);
+        });
+            
+        // Step 2: Create the tooltip in chartGroup.
+        chartGroup.call(toolTip);
+
+        // Step 3: Create "mouseover" event listener to display tooltip
+        circlesGroup.on("mouseover", function(d) {
+            toolTip.show(d, this);
+        })
+        
+        // Step 4: Create "mouseout" event listener to hide tooltip
+            .on("mouseout", function(d) {
+            toolTip.hide(d);
+            });
+                
 
     });
 

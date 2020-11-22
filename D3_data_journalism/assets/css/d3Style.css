@@ -28,6 +28,7 @@
   font-family: sans-serif;
   fill: #fff;
   text-anchor: middle;
+  
 }
 
 .stateCircle {
@@ -52,7 +53,9 @@
   border-radius: 4px;
 }
 
-/* Mobile Rules */
+
+
+/* Mobile Rules*/
 @media screen and (max-width: 530px) {
   .stateText {
     display: none;
@@ -67,4 +70,4 @@
   .aText {
     font-size: 13px;
   }
-}
+} 
