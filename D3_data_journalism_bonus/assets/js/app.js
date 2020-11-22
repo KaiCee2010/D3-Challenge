@@ -162,7 +162,7 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
   return circlesGroup;
 }
 
-d3.csv("assets/data/data.csv").then(function(healthData){
+d3.csv("/assets/data/data.csv").then(function(healthData){
 
     // parse data
     healthData.forEach(function(data) {
