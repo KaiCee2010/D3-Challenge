@@ -102,6 +102,19 @@ function renderCircles(circlesGroup, newXScale, chosenXaxis, newYScale, chosenYa
     return circlesGroup;
 }
 
+
+function renderCirclesLabels(circlesLabelsGroup, newXScale, chosenXaxis, newYScale, chosenYaxis) {
+
+  circlesLabelsGroup.transition()
+    .duration(1000)
+    .attr("x", d => newXScale(d[chosenXAxis]))
+    .attr("y", d => newYScale(d[chosenYAxis]));
+
+  return circlesLabelsGroup;
+}
+
+
+
 // function used for updating circles group with new tooltip
 function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
 
@@ -199,6 +212,23 @@ d3.csv("/assets/data/data.csv").then(function(healthData){
         .attr("cx", d => xLinearScale(d[chosenXAxis]))
         .attr("cy", d => yLinearScale(d[chosenYAxis]))
         .attr("r", 10);
+
+
+    var circlesLabelsGroup = chartGroup.append("g")
+        // .attr("font-family", "Yanone Kaffeesatz")
+        // .attr("font-weight", 700)
+        .attr("text-anchor", "middle")
+        .selectAll("text")
+        .data(healthData)
+        .enter()
+        .append("text")
+        .attr("class", "stateText")
+        // .attr("opacity", 0)
+        // .attr("dy", "0.35em")
+        .attr("x",  d => xLinearScale(d[chosenXAxis]))
+        .attr("y",  d => yLinearScale(d[chosenYAxis])*1.00625)
+        .attr("font-size", 10)
+        .text(d => d.abbr);  
 
     // Create group for 3 x- axis labels
     var xLabelsGroup = chartGroup.append("g")
@@ -301,6 +331,8 @@ d3.csv("/assets/data/data.csv").then(function(healthData){
         // updates tooltips with new info
         circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
 
+        circlesLabelsGroup = renderCirclesLabels(circlesLabelsGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
+
         // changes classes to change bold text
         if (chosenXAxis === "age") {
             ageLabel
@@ -375,6 +407,8 @@ d3.csv("/assets/data/data.csv").then(function(healthData){
 
         // updates tooltips with new info
         circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
+
+        circlesLabelsGroup = renderCirclesLabels(circlesLabelsGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
 
         // changes classes to change bold text
         if (chosenYAxis === "smokes") {
