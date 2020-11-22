@@ -72,7 +72,7 @@ function yScale(healthData, chosenYAxis) {
   }
 
 // function used for updating xAxis var upon click on axis label
-function renderAxes(newXScale, xAxis) {
+function xRenderAxes(newXScale, xAxis) {
     var bottomAxis = d3.axisBottom(newXScale);
   
     xAxis.transition()
@@ -82,11 +82,22 @@ function renderAxes(newXScale, xAxis) {
     return xAxis;
 }
 
-function renderCircles(circlesGroup, newXScale, chosenXaxis) {
+function yRenderAxes(newYScale, yAxis) {
+    var bottomAxis = d3.axisLeft(newYScale);
+  
+    xAxis.transition()
+      .duration(1000)
+      .call(leftAxis);
+  
+    return yAxis;
+}
+
+function renderCircles(circlesGroup, newXScale, chosenXaxis, newYScale, chosenYaxis) {
 
     circlesGroup.transition()
       .duration(1000)
-      .attr("cx", d => newXScale(d[chosenXAxis]));
+      .attr("cx", d => newXScale(d[chosenXAxis]))
+      .attr("cy", d => newYScale(d[chosenYAxis]));
   
     return circlesGroup;
 }
@@ -119,7 +130,7 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
     .attr("class", "tooltip")
     .offset([80, -60])
     .html(function(d) {
-      return (`${d.rockband}<br>${label} ${d[chosenXAxis]}`);
+      return (`${d[chosenYAxis]}<br>${label} ${d[chosenXAxis]}`);
     });
 
     circlesGroup.call(toolTip);
@@ -206,7 +217,7 @@ d3.csv("/assets/data/data.csv").then(function(healthData){
     var incomeLabel = xLabelsGroup.append("text")
     .attr("x", 0)
     .attr("y", 80)
-    .attr("value", "age") // value to grab for event listener
+    .attr("value", "income") // value to grab for event listener
     .classed("inactive", true)
     .text("Household Income (Median)");
 
@@ -235,5 +246,74 @@ d3.csv("/assets/data/data.csv").then(function(healthData){
     .attr("value", "obesity") // value to grab for event listener
     .classed("inactive", true)
     .text("Obese (%)");
+
+
+    // updateToolTip function above csv import
+//   var circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
+
+  // x axis labels event listener
+  xLabelsGroup.selectAll("text")
+    .on("click", function() {
+      // get value of selection
+      var value = d3.select(this).attr("value");
+      if (value !== chosenXAxis) {
+
+        // replaces chosenXAxis with value
+        chosenXAxis = value;
+
+        // console.log(chosenXAxis)
+
+        // functions here found above csv import
+        // updates x scale for new data
+        xLinearScale = xScale(healthData, chosenXAxis);
+
+        // updates x axis with transition
+        xAxis = xRenderAxes(xLinearScale, xAxis);
+
+        // updates circles with new x values
+        circlesGroup = renderCircles(circlesGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
+
+        // updates tooltips with new info
+        // circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
+
+        // changes classes to change bold text
+        if (chosenXAxis === "age") {
+            ageLabel
+                .classed("active", true)
+                .classed("inactive", false);
+            incomeLabel
+                .classed("active", false)
+                .classed("inactive", true);
+            povertyLabel
+                .classed("active", false)
+                .classed("inactive", true);
+        }
+        else if (chosenXAxis === "income") {
+            ageLabel
+                .classed("active", false)
+                .classed("inactive", true);
+            incomeLabel
+                .classed("active", true)
+                .classed("inactive", false);
+            povertyLabel
+                .classed("active", false)
+                .classed("inactive", true);
+        }
+        else {
+            ageLabel
+                .classed("active", false)
+                .classed("inactive", true);
+            incomeLabel
+                .classed("active", false)
+                .classed("inactive", true);
+            povertyLabel
+                .classed("active", true)
+                .classed("inactive", false);
+        }
+      }
+    });
+}).catch(function(error) {
+  console.log(error);
+
 
 });
