@@ -100,9 +100,10 @@ function makeResponsive() {
             
         var toolTip = d3.tip()
         .attr("class", "d3-tip") //toolTip doesn't have a "classed()" function like core d3 uses to add classes, so we use the attr() method.
-        .offset([50, 20]) // (vertical, horizontal)
+        .offset([80, 50]) // (vertical, horizontal)
         .html(function(d) {
-            return (`<strong>${d.state}<strong>`);
+            return (`${d.state}<br>Poverty: ${d.poverty}%
+            <br>Healthcare: ${d.healthcare}%`);
         });
             
         // Step 2: Create the tooltip in chartGroup.
@@ -119,6 +120,8 @@ function makeResponsive() {
             });
                 
 
+    }).catch(function(error) {
+        console.log(error);
     });
 
 
