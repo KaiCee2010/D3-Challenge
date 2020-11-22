@@ -127,24 +127,22 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
 
 
     var toolTip = d3.tip()
-        .attr("class", "d3-tip") //toolTip doesn't have a "classed()" function like core d3 uses to add classes, so we use the attr() method.
-        .offset([80, 50]) // (vertical, horizontal)
-        .html(function(d) {
-            return (`${d[chosenXAxis]}<br> ${d[chosenYAxis]}%`);
-        });
-            
-        // Step 2: Create the tooltip in chartGroup.
-        chartGroup.call(toolTip);
+    .attr("class", "tooltip")
+    .offset([80, -60])
+    .html(function(d) {
+      return (`${d[chosenYAxis]}<br>${label} ${d[chosenXAxis]}`);
+    });
 
-        // Step 3: Create "mouseover" event listener to display tooltip
-        circlesGroup.on("mouseover", function(d) {
-            toolTip.show(d, this);
-        })
-        
-        // Step 4: Create "mouseout" event listener to hide tooltip
-            .on("mouseout", function(d) {
-            toolTip.hide(d);
-            });
+    circlesGroup.call(toolTip);
+
+    circlesGroup.on("mouseover", function(data) {
+        toolTip.show(data);
+    })
+
+    // onmouseout event
+    .on("mouseout", function(data, index) {
+      toolTip.hide(data);
+    });
 
   return circlesGroup;
 }
@@ -207,24 +205,21 @@ d3.csv("/assets/data/data.csv").then(function(healthData){
     var povertyLabel = xLabelsGroup.append("text")
     .attr("x", 0)
     .attr("y", 40)
-    .attr("xvalue", "poverty") // value to grab for event listener
-    .attr("id", "poverty")
+    .attr("value", "poverty") // value to grab for event listener
     .classed("active", true)
     .text("In Poverty (%)");
 
     var ageLabel = xLabelsGroup.append("text")
     .attr("x", 0)
     .attr("y", 60)
-    .attr("xvalue", "age") // value to grab for event listener
-    .attr("id", "age") 
+    .attr("value", "age") // value to grab for event listener
     .classed("inactive", true)
     .text("Age (Median)");
 
     var incomeLabel = xLabelsGroup.append("text")
     .attr("x", 0)
     .attr("y", 80)
-    .attr("xvalue", "income") // value to grab for event listener
-    .attr("id", "income")
+    .attr("value", "income") // value to grab for event listener
     .classed("inactive", true)
     .text("Household Income (Median)");
 
@@ -236,55 +231,37 @@ d3.csv("/assets/data/data.csv").then(function(healthData){
     .attr("y",  0 - margin.left + 50)
     .attr("x", 0 - (chartHeight / 2))
     .attr("dy", "1em")
-    .attr("yvalue", "healthcare") // value to grab for event listener
-    .attr("id", "healthcare")
+    .attr("value", "healthcare") // value to grab for event listener
     .classed("active", true)
     .text("Lacks Healthcare (%)");
 
     var smokesLabel = yLabelsGroup.append("text")
     .attr("y",  0 - margin.left + 50)
     .attr("x", 0 - (chartHeight / 2))
-    .attr("yvalue", "smokes") // value to grab for event listener
-    .attr("id", "smokes")
+    .attr("value", "smokes") // value to grab for event listener
     .classed("inactive", true)
     .text("Smokes (%)");
 
     var obesityLabel = yLabelsGroup.append("text")
     .attr("y",  0 - margin.left + 30)
     .attr("x", 0 - (chartHeight / 2))
-    .attr("yvalue", "obesity") // value to grab for event listener
-    .attr("id", "obesity")
+    .attr("value", "obesity") // value to grab for event listener
     .classed("inactive", true)
     .text("Obese (%)");
 
 
     // updateToolTip function above csv import
-    var circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
+    //   var circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
 
   // x axis labels event listener
   xLabelsGroup.selectAll("text")
     .on("click", function() {
       // get value of selection
-      var xvalue = d3.select(this).attr("xvalue");
-
-      if (d3.select("#healthcare").classed("active")){
-        var yvalue = d3.select("#healthcare").attr("yvalue")
-      }
-      else if (d3.select("#smokes").classed("active")){
-        var yvalue = d3.select("#smokes").attr("yvalue")
-      }
-      else{
-        var yvalue = d3.select("#obesity").attr("yvalue")
-      }
-
-      console.log(`xlabels group yvalue: ${yvalue}`)
-      
-      
-      if (xvalue !== chosenXAxis) {
+      var value = d3.select(this).attr("value");
+      if (value !== chosenXAxis) {
 
         // replaces chosenXAxis with value
-        chosenXAxis = xvalue;
-        chosenYAxis = yvalue;
+        chosenXAxis = value;
 
         // console.log(chosenXAxis)
 
@@ -299,7 +276,7 @@ d3.csv("/assets/data/data.csv").then(function(healthData){
         circlesGroup = renderCircles(circlesGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
 
         // updates tooltips with new info
-        circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
+        // circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
 
         // changes classes to change bold text
         if (chosenXAxis === "age") {
@@ -341,25 +318,11 @@ d3.csv("/assets/data/data.csv").then(function(healthData){
     yLabelsGroup.selectAll("text")
     .on("click", function() {
       // get value of selection
-      var yvalue = d3.select(this).attr("yvalue");
-
-      if (d3.select("#poverty").classed("active")){
-        var xvalue = d3.select("#poverty").attr("xvalue")
-      }
-      else if (d3.select("#age").classed("active")){
-        var xvalue = d3.select("#age").attr("xvalue")
-      }
-      else{
-        var xvalue = d3.select("#income").attr("xvalue")
-      }
-
-      console.log(`ylabels group xvalue: ${xvalue}`)
-
-      if (yvalue !== chosenYAxis) {
+      var value = d3.select(this).attr("value");
+      if (value !== chosenYAxis) {
 
         // replaces chosenXAxis with value
-        chosenXAxis = xvalue;
-        chosenYAxis = yvalue;
+        chosenYAxis = value;
 
         // console.log(chosenXAxis)
 
@@ -374,7 +337,7 @@ d3.csv("/assets/data/data.csv").then(function(healthData){
         circlesGroup = renderCircles(circlesGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
 
         // updates tooltips with new info
-        circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
+        // circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
 
         // changes classes to change bold text
         if (chosenYAxis === "smokes") {
