@@ -15,13 +15,25 @@ function makeResponsive() {
     svgWidth = document.getElementById('scatter').clientWidth;
     svgHeight = svgWidth / 1.45;
     
-    
+    var border=1;
+    var bordercolor='black';
+
     // Append SVG element
     var svg = d3
-    .select("#scatter")
-    .append("svg")
-    .attr("height", svgHeight)
-    .attr("width", svgWidth);
+        .select("#scatter")
+        .append("svg")
+        .attr("height", svgHeight)
+        .attr("width", svgWidth)
+        .attr("border", border);
+
+    var borderPath = svg.append("rect")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("height", svgHeight)
+        .attr("width", svgWidth)
+        .style("stroke", bordercolor)
+        .style("fill", "none")
+        .style("stroke-width", border);
 
     var margin = {
         top: 50,
@@ -98,6 +110,24 @@ function makeResponsive() {
             .text(d => d.abbr)
             ;  
             
+        
+        // Create axes labels
+        chartGroup.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - margin.left)
+        .attr("x", 0 - (chartHeight / 2) - 50)
+        .attr("dy", "1em")
+        .attr("class", "axisText")
+        .attr("font-weight", "bold")
+        .text("Lacks Healthcare (%)");
+
+
+        chartGroup.append("text")
+        .attr("transform", `translate(${(chartWidth / 2)- 50}, ${chartHeight + margin.top - 10})`)
+        .attr("class", "axisText")
+        .attr("font-weight", "bold")
+        .text("In Poverty (%)");
+        
         var toolTip = d3.tip()
         .attr("class", "d3-tip") //toolTip doesn't have a "classed()" function like core d3 uses to add classes, so we use the attr() method.
         .offset([80, 50]) // (vertical, horizontal)
