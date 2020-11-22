@@ -2,53 +2,7 @@
 // The code for the chart is wrapped inside a function that
 // automatically resizes the chart
 
-var svgArea = d3.select("#scatter").select("svg");
 
-// clear svg is not empty
-if (!svgArea.empty()) {
-svgArea.remove();
-}
-
-svgWidth = document.getElementById('scatter').clientWidth;
-svgHeight = svgWidth / 1.45;
-
-var border=1;
-var bordercolor='gray';
-
-// Append SVG element
-var svg = d3
-    .select("#scatter")
-    .append("svg")
-    .attr("height", svgHeight)
-    .attr("width", svgWidth)
-    .attr("border", border);
-
-var borderPath = svg.append("rect")
-    .attr("x", 0)
-    .attr("y", 0)
-    .attr("height", svgHeight)
-    .attr("width", svgWidth)
-    .style("stroke", bordercolor)
-    .style("fill", "none")
-    .style("stroke-width", border);
-
-var margin = {
-    top: 50,
-    bottom: 100,
-    right: 50,
-    left: 100
-};
-
-var chartHeight = svgHeight - margin.top - margin.bottom;
-var chartWidth = svgWidth - margin.left - margin.right;
-
-var chartGroup = svg.append("g")
-    .attr("transform", `translate(${margin.left}, ${margin.top})`);
-
-
-// Initial Params
-var chosenXAxis = "poverty";
-var chosenYAxis = "healthcare";
 
 // function used for updating x-scale var upon click on axis label
 function xScale(healthData, chosenXAxis) {
@@ -161,6 +115,56 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
 
   return circlesGroup;
 }
+
+
+var svgArea = d3.select("#scatter").select("svg");
+
+// clear svg is not empty
+if (!svgArea.empty()) {
+  svgArea.remove();
+  }
+
+svgWidth = document.getElementById('scatter').clientWidth;
+svgHeight = svgWidth / 1.45;
+
+var border=1;
+var bordercolor='gray';
+
+// Append SVG element
+var svg = d3
+    .select("#scatter")
+    .append("svg")
+    .attr("height", svgHeight)
+    .attr("width", svgWidth)
+    .attr("border", border);
+
+var borderPath = svg.append("rect")
+    .attr("x", 0)
+    .attr("y", 0)
+    .attr("height", svgHeight)
+    .attr("width", svgWidth)
+    .style("stroke", bordercolor)
+    .style("fill", "none")
+    .style("stroke-width", border);
+
+var margin = {
+    top: 50,
+    bottom: 100,
+    right: 50,
+    left: 100
+};
+
+var chartHeight = svgHeight - margin.top - margin.bottom;
+var chartWidth = svgWidth - margin.left - margin.right;
+
+var chartGroup = svg.append("g")
+    .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+
+// Initial Params
+var chosenXAxis = "poverty";
+var chosenYAxis = "healthcare";
+
 
 d3.csv("assets/data/data.csv").then(function(healthData){
 
