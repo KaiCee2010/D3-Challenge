@@ -16,7 +16,7 @@ function makeResponsive() {
     svgHeight = svgWidth / 1.45;
     
     var border=1;
-    var bordercolor='gray';
+    var bordercolor='black';
 
     // Append SVG element
     var svg = d3
