@@ -2,7 +2,53 @@
 // The code for the chart is wrapped inside a function that
 // automatically resizes the chart
 
+var svgArea = d3.select("#scatter").select("svg");
 
+// clear svg is not empty
+if (!svgArea.empty()) {
+svgArea.remove();
+}
+
+svgWidth = document.getElementById('scatter').clientWidth;
+svgHeight = svgWidth / 1.45;
+
+var border=1;
+var bordercolor='gray';
+
+// Append SVG element
+var svg = d3
+    .select("#scatter")
+    .append("svg")
+    .attr("height", svgHeight)
+    .attr("width", svgWidth)
+    .attr("border", border);
+
+var borderPath = svg.append("rect")
+    .attr("x", 0)
+    .attr("y", 0)
+    .attr("height", svgHeight)
+    .attr("width", svgWidth)
+    .style("stroke", bordercolor)
+    .style("fill", "none")
+    .style("stroke-width", border);
+
+var margin = {
+    top: 50,
+    bottom: 100,
+    right: 50,
+    left: 100
+};
+
+var chartHeight = svgHeight - margin.top - margin.bottom;
+var chartWidth = svgWidth - margin.left - margin.right;
+
+var chartGroup = svg.append("g")
+    .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+
+// Initial Params
+var chosenXAxis = "poverty";
+var chosenYAxis = "healthcare";
 
 // function used for updating x-scale var upon click on axis label
 function xScale(healthData, chosenXAxis) {
@@ -100,71 +146,21 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
             return (`${d.state}<br>${xlabel}: ${d[chosenXAxis]}<br> ${ylabel}: ${d[chosenYAxis]}`);
         });
             
-        // Step 2: Create the tooltip in chartGroup.
-        chartGroup.call(toolTip);
+        // Create the tooltip in chartGroup.
+        circlesGroup.call(toolTip);
 
-        // Step 3: Create "mouseover" event listener to display tooltip
+        //Create "mouseover" event listener to display tooltip
         circlesGroup.on("mouseover", function(d) {
             toolTip.show(d, this);
         })
         
-        // Step 4: Create "mouseout" event listener to hide tooltip
+        //Create "mouseout" event listener to hide tooltip
             .on("mouseout", function(d) {
             toolTip.hide(d);
             });
 
   return circlesGroup;
 }
-
-
-var svgArea = d3.select("#scatter").select("svg");
-
-// clear svg is not empty
-if (!svgArea.empty()) {
-  svgArea.remove();
-  }
-
-svgWidth = document.getElementById('scatter').clientWidth;
-svgHeight = svgWidth / 1.45;
-
-var border=1;
-var bordercolor='gray';
-
-// Append SVG element
-var svg = d3
-    .select("#scatter")
-    .append("svg")
-    .attr("height", svgHeight)
-    .attr("width", svgWidth)
-    .attr("border", border);
-
-var borderPath = svg.append("rect")
-    .attr("x", 0)
-    .attr("y", 0)
-    .attr("height", svgHeight)
-    .attr("width", svgWidth)
-    .style("stroke", bordercolor)
-    .style("fill", "none")
-    .style("stroke-width", border);
-
-var margin = {
-    top: 50,
-    bottom: 100,
-    right: 50,
-    left: 100
-};
-
-var chartHeight = svgHeight - margin.top - margin.bottom;
-var chartWidth = svgWidth - margin.left - margin.right;
-
-var chartGroup = svg.append("g")
-    .attr("transform", `translate(${margin.left}, ${margin.top})`);
-
-
-// Initial Params
-var chosenXAxis = "poverty";
-var chosenYAxis = "healthcare";
-
 
 d3.csv("assets/data/data.csv").then(function(healthData){
 
@@ -185,9 +181,6 @@ d3.csv("assets/data/data.csv").then(function(healthData){
 
     // Create y scale function
     var yLinearScale = yScale(healthData, chosenYAxis);
-    // var yLinearScale = d3.scaleLinear()
-    // .domain([0, d3.max(healthData, d => d.healthcare)])
-    // .range([chartHeight, 0]);
 
     // Create initial axis functions
     var bottomAxis = d3.axisBottom(xLinearScale);
@@ -200,8 +193,6 @@ d3.csv("assets/data/data.csv").then(function(healthData){
         .call(bottomAxis);
 
     // append y axis
-    // chartGroup.append("g")
-    //     .call(leftAxis);
     var yAxis = chartGroup.append("g")
         .classed("y-axis", true)
         // .attr("transform", `translate(40, 0)`)
@@ -219,16 +210,12 @@ d3.csv("assets/data/data.csv").then(function(healthData){
 
 
     var circlesLabelsGroup = chartGroup.append("g")
-        // .attr("font-family", "Yanone Kaffeesatz")
-        // .attr("font-weight", 700)
         .attr("text-anchor", "middle")
         .selectAll("text")
         .data(healthData)
         .enter()
         .append("text")
         .attr("class", "stateText")
-        // .attr("opacity", 0)
-        // .attr("dy", "0.35em")
         .attr("x",  d => xLinearScale(d[chosenXAxis]))
         .attr("y",  d => yLinearScale(d[chosenYAxis])*1.00625)
         .attr("font-size", 10)
@@ -320,9 +307,6 @@ d3.csv("assets/data/data.csv").then(function(healthData){
         chosenXAxis = xvalue;
         chosenYAxis = yvalue;
 
-        // console.log(chosenXAxis)
-
-        // functions here found above csv import
         // updates x scale for new data
         xLinearScale = xScale(healthData, chosenXAxis);
 
@@ -397,16 +381,13 @@ d3.csv("assets/data/data.csv").then(function(healthData){
         chosenXAxis = xvalue;
         chosenYAxis = yvalue;
 
-        // console.log(chosenXAxis)
-
-        // functions here found above csv import
-        // updates x scale for new data
+        // updates y scale for new data
         yLinearScale = yScale(healthData, chosenYAxis);
 
-        // updates x axis with transition
+        // updates y axis with transition
         yAxis = yRenderAxes(yLinearScale, yAxis);
 
-        // updates circles with new x values
+        // updates circles with new values
         circlesGroup = renderCircles(circlesGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
 
         // updates tooltips with new info

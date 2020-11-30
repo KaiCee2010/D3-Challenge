@@ -1,37 +1,34 @@
-## Welcome to GitHub Pages
+This homework assigned used data from to create a scatter plot using data from [US Census Bureau](https://data.census.gov/cedsci/).
 
-You can use the [editor on GitHub](https://github.com/KaiCee2010/D3-Challenge/edit/main/README.md) to maintain and preview the content for your website in Markdown files.
+## Healthcare vs. Poverty
+The functioning web page can be found here: [Healthcare vs. Poverty](https://kaicee2010.github.io/D3-Challenge/D3_data_journalism/index.html)
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## Summary
+D3 was used to create the scatter plot.  The x-axis contain the poverty data while the y-axis charts the healthcare data.
 
-### Markdown
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+## Tasks
+The following tasks were taken to create the web page:
+- Clear svg is not empty
+- Append SVG element
+- Create the border for the object
+- Create the margins for the plot
+- Calculate the chart width and height
+- Append group element
+- Read the csv data
+- calculate the scales
+- Create axes
+- Append axes
+- Create the circles
+- Label the circles
+- Create axes labels
+- Create the tooltips
+- Create the tooltip in chartGroup.
+- When the browser loads, makeResponsive() is called.
+- When the browser window is resized, makeResponsive() is called.
 
-```markdown
-Syntax highlighted code block
 
-# Header 1
-## Header 2
-### Header 3
+## Bonus
+The bonus plot can be found here: [Health Risk vs Other Factors](https://kaicee2010.github.io/D3-Challenge/D3_data_journalism_bonus/index.html)
 
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/KaiCee2010/D3-Challenge/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+It follows many of the same tasks to create it at the standard assignment.  However, plots must rebuilt each time an axis title is clicked.  Tooltips must also be recreated. 
