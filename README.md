@@ -1,3 +1,4 @@
+# D3 Challenge - D3 Data Journalism
 This homework assigned used data from to create a scatter plot using data from [US Census Bureau](https://data.census.gov/cedsci/).
 
 ## Healthcare vs. Poverty
