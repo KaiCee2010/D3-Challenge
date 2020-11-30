@@ -26,6 +26,7 @@ function makeResponsive() {
         .attr("width", svgWidth)
         .attr("border", border);
 
+    //create the border for the object
     var borderPath = svg.append("rect")
         .attr("x", 0)
         .attr("y", 0)
@@ -35,6 +36,7 @@ function makeResponsive() {
         .style("fill", "none")
         .style("stroke-width", border);
 
+    //create the margins for the plot
     var margin = {
         top: 50,
         bottom: 50,
@@ -42,6 +44,7 @@ function makeResponsive() {
         left: 50
     };
 
+    //calculate the chart width and height
     var chartHeight = svgHeight - margin.top - margin.bottom;
     var chartWidth = svgWidth - margin.left - margin.right;
 
@@ -49,6 +52,7 @@ function makeResponsive() {
     var chartGroup = svg.append("g")
         .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
+    //Read the csv data
     d3.csv("assets/data/data.csv").then(function(healthData){
 
         healthData.forEach(function(data) {
@@ -59,6 +63,7 @@ function makeResponsive() {
             console.log(data)
         });
 
+        //calculate the scales
         var xScale = d3.scaleLinear()
         .domain([d3.min(healthData, d => d.poverty)/1.35, d3.max(healthData, d => d.poverty)*1.15])
         .range([0, chartWidth]);
@@ -81,7 +86,7 @@ function makeResponsive() {
 
         var radius = 10
 
-        
+        //create the circles
         var circlesGroup = chartGroup.append("g")
         .selectAll("circle")
         .data(healthData)
@@ -92,7 +97,7 @@ function makeResponsive() {
         .attr("cy", d => yScale(d.healthcare))
         .attr("r", 10);
         
-
+        //label the circles
         var label = chartGroup.append("g")
             // .attr("font-family", "Yanone Kaffeesatz")
             // .attr("font-weight", 700)
@@ -128,6 +133,7 @@ function makeResponsive() {
         .attr("font-weight", "bold")
         .text("In Poverty (%)");
         
+        //create the tooltips
         var toolTip = d3.tip()
         .attr("class", "d3-tip") //toolTip doesn't have a "classed()" function like core d3 uses to add classes, so we use the attr() method.
         .offset([80, 50]) // (vertical, horizontal)
@@ -136,15 +142,15 @@ function makeResponsive() {
             <br>Healthcare: ${d.healthcare}%`);
         });
             
-        // Step 2: Create the tooltip in chartGroup.
+        // Create the tooltip in chartGroup.
         chartGroup.call(toolTip);
 
-        // Step 3: Create "mouseover" event listener to display tooltip
+        //Create "mouseover" event listener to display tooltip
         circlesGroup.on("mouseover", function(d) {
             toolTip.show(d, this);
         })
         
-        // Step 4: Create "mouseout" event listener to hide tooltip
+        //Create "mouseout" event listener to hide tooltip
             .on("mouseout", function(d) {
             toolTip.hide(d);
             });
